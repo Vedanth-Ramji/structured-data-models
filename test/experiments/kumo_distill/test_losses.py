@@ -16,6 +16,21 @@ def test_classification_kd_is_zero_for_identical_logits() -> None:
     assert result.soft.item() == pytest.approx(0.0, abs=1e-6)
 
 
+def test_classification_kd_is_normalized_per_query_example() -> None:
+    student = torch.tensor([[[2.0, -1.0, 0.5]]])
+    teacher = torch.tensor([[[-0.5, 1.5, 0.0]]])
+    target = torch.tensor([[1]])
+    single = classification_distillation_loss(student, teacher, target)
+    repeated = classification_distillation_loss(
+        student.repeat(1, 7, 1),
+        teacher.repeat(1, 7, 1),
+        target.repeat(1, 7),
+    )
+
+    assert repeated.hard.item() == pytest.approx(single.hard.item())
+    assert repeated.soft.item() == pytest.approx(single.soft.item())
+
+
 def test_regression_kd_is_zero_for_identical_quantiles() -> None:
     quantiles = torch.randn(2, 3, 999)
     result = regression_distillation_loss(

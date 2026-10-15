@@ -35,8 +35,12 @@ def classification_distillation_loss(
     student_logits = student_logits.float()
     teacher_logits = teacher_logits.detach().float()
     hard = F.cross_entropy(student_logits.flatten(0, 1), targets.flatten())
-    teacher_prob = F.softmax(teacher_logits / temperature, dim=-1)
-    student_log_prob = F.log_softmax(student_logits / temperature, dim=-1)
+    teacher_prob = F.softmax(
+        teacher_logits / temperature, dim=-1
+    ).flatten(0, -2)
+    student_log_prob = F.log_softmax(
+        student_logits / temperature, dim=-1
+    ).flatten(0, -2)
     soft = (
         F.kl_div(
             student_log_prob,
