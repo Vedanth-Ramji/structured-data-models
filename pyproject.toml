@@ -131,7 +131,7 @@ skip_covered = true
 skip_empty = true
 
 [tool.ty.src]
-include = ["sdm", "test", "examples", "benchmark"]
+include = ["sdm", "test", "examples", "benchmark", "experiments"]
 
 [[tool.ty.overrides]]
 include = ["examples/**", "benchmark/**"]
@@ -148,7 +148,7 @@ unresolved-import = "ignore"
 unused-ignore-comment = "ignore"
 
 [tool.ruff]  # https://docs.astral.sh/ruff/rules
-src = ["pyproject.toml", "sdm", "test", "examples", "benchmark"]
+src = ["pyproject.toml", "sdm", "test", "examples", "benchmark", "experiments"]
 line-length = 79
 indent-width = 4
 target-version = "py311"
@@ -232,6 +232,9 @@ banned-module-level-imports = [
     "D103",  # Ignore "Missing docstring in public function"
     "T201",  # Allow print.
     "TID253",  # Benchmark dependencies should be imported at module scope.
+]
+"experiments/**/*.py" = [
+    "T201",  # Allow command-line progress and report output.
 ]
 "test/**/*.py" = [
     "D101",  # Ignore "Missing docstring in public class"
